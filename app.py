@@ -29,9 +29,27 @@ class Item(Resource):
         items.append(item)
         return item, 201
 
+    def delete(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
+        global items
+        items = list(filter(lambda x: x['name'] != name, items))
+        return dict(message=f'An item {name} successfully deleted!'), 200
+
+    def put(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
+        data = request.get_json()
+        item = next(filter(lambda x: x['name'] == name, items), None)
+
+        # create a new item
+        if item is None:
+            item = dict(name=name, price=data['price'])
+            items.append(item)
+            return item, 201
+
+        # update an existing item
+        item.update(data)
+        return item, 201
+
 
 class ItemList(Resource):
-
     def get(self) -> Tuple[Dict[str, List], int]:
         return {'items': items}, 200
 
