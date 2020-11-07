@@ -13,12 +13,12 @@ items: List[Dict[str, str]] = []
 class Item(Resource):
 
     def get(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
-        for item in items:
-            if item['name'] == name:
-                return item, 200
-        return dict(item=None), 404
+        item = next(filter(lambda x: x['name'] == name, items), None)
+        return dict(item=item), 200 if item else 404
 
     def post(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
+        if next(filter(lambda x: x['name'] == name, items), None) is not None:
+            return dict(message=f'An item {name} already exists!'), 400
         data = request.get_json()
         item = dict(name=name, price=data['price'])
         items.append(item)
@@ -27,8 +27,8 @@ class Item(Resource):
 
 class ItemList(Resource):
 
-    def get(self):
-        return {'items': items}
+    def get(self) -> Tuple[Dict[str, List], int]:
+        return {'items': items}, 200
 
 
 api.add_resource(Item, '/item/<string:name>')
