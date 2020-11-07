@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 flask = "*"
 flask-restful = "*"
+flask-jwt = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.8"
