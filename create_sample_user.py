@@ -4,9 +4,6 @@ connection = sqlite3.connect('db/data.db')
 
 cursor = connection.cursor()
 
-create_table = "CREATE TABLE users (id int, username text, password text)"
-cursor.execute(create_table)
-
 insert_query = "INSERT INTO users VALUES (?, ?, ?)"
 
 users = [
