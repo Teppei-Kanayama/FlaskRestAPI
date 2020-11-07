@@ -9,7 +9,7 @@ class User:
 
     @classmethod
     def find_by_username(cls, username: str) -> "User":
-        connection = sqlite3.connect('data.db')
+        connection = sqlite3.connect('db/data.db')
         cursor = connection.cursor()
         query = "SELECT * FROM users WHERE username=?"
         result = cursor.execute(query, (username,))
