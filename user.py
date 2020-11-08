@@ -47,11 +47,14 @@ class UserRegister(Resource):
     parser.add_argument('password', type=str, required=True)
 
     def post(self) -> Tuple[Dict[str, str], int]:
+        data = self.parser.parse_args()
+        if User.find_by_username(data['username']):
+            return {"message": f"The username {data['username']} already exists!"}, 400
+
         connection = sqlite3.connect('db/data.db')
         cursor = connection.cursor()
         query = "INSERT INTO users VALUES (NULL, ?, ?)"
 
-        data = self.parser.parse_args()
         cursor.execute(query, (data['username'], data['password']))
         connection.commit()
         connection.close()
