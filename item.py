@@ -9,6 +9,8 @@ class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price', type=float, required=True, help='Price of the item')
 
+    db_name = 'db/data.db'
+
     @classmethod
     def _find_by_name(cls, name: str) -> Optional[Dict[str, Any]]:
         connection = sqlite3.connect('db/data.db')
@@ -19,6 +21,24 @@ class Item(Resource):
         connection.close()
         if row:
             return dict(name=row[0], price=row[1])
+
+    @classmethod
+    def _insert_items(cls, item: Dict[str, Any]) -> None:
+        connection = sqlite3.connect('db/data.db')
+        cursor = connection.cursor()
+        query = "INSERT INTO items VALUES (?, ?)"
+        cursor.execute(query, (item['name'], item['price']))
+        connection.commit()
+        connection.close()
+
+    @classmethod
+    def _update_items(cls, item: Dict[str, Any]) -> None:
+        connection = sqlite3.connect('db/data.db')
+        cursor = connection.cursor()
+        query = "UPDATE items SET price=? WHERE name=?"
+        cursor.execute(query, (item['price'], item['name']))
+        connection.commit()
+        connection.close()
 
     @jwt_required()
     def get(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
@@ -32,15 +52,10 @@ class Item(Resource):
             return dict(message=f'An item {name} already exists!'), 400
         posted_data = self.parser.parse_args()
         item = dict(name=name, price=posted_data['price'])
-
-        # TODO: functionize
-        connection = sqlite3.connect('db/data.db')
-        cursor = connection.cursor()
-        query = "INSERT INTO items VALUES (?, ?)"
-        cursor.execute(query, (item['name'], item['price']))
-        connection.commit()
-        connection.close()
-
+        try:
+            self._insert_items(item)
+        except Exception:
+            return dict(message='An error occurred inserting item!'), 500
         return item, 201
 
     def delete(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
@@ -54,16 +69,18 @@ class Item(Resource):
 
     def put(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
         data = self.parser.parse_args()
-        item = next(filter(lambda x: x['name'] == name, items), None)
+        item = dict(name=name, price=data['price'])
 
-        # create a new item
-        if item is None:
-            item = dict(name=name, price=data['price'])
-            items.append(item)
-            return item, 201
-
-        # update an existing item
-        item.update(data)
+        if self._find_by_name(name):
+            try:
+                self._update_items(item)
+            except Exception:
+                return dict(message='An error occurred updating item!'), 500
+        else:
+            try:
+                self._insert_items(item)
+            except Exception:
+                return dict(message='An error occurred inserting item!'), 500
         return item, 201
 
 
