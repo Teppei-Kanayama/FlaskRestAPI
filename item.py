@@ -9,8 +9,6 @@ class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price', type=float, required=True, help='Price of the item')
 
-    db_name = 'db/data.db'
-
     @classmethod
     def _find_by_name(cls, name: str) -> Optional[Dict[str, Any]]:
         connection = sqlite3.connect('db/data.db')

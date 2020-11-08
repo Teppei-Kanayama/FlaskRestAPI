@@ -129,4 +129,4 @@ dmypy.json
 .idea
 
 # database
-data.db
+db/data.db
