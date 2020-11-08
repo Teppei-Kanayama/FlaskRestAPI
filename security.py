@@ -2,7 +2,7 @@ from typing import Optional, Dict
 
 from werkzeug.security import safe_str_cmp
 
-from user import User
+from resources.user import User
 
 
 def authenticate(username: str, password: str) -> Optional[User]:
