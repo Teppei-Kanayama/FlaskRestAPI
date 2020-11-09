@@ -1,6 +1,6 @@
 import sqlite3
 
-connection = sqlite3.connect('db/data.db')
+connection = sqlite3.connect('data.db')
 
 cursor = connection.cursor()
 cursor.execute("INSERT INTO items VALUES ('test_item', 99.99)")

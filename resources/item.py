@@ -24,34 +24,32 @@ class Item(Resource):
         posted_data = self.parser.parse_args()
         item = ItemModel(name=name, price=posted_data['price'])
         try:
-            item.insert_items()
+            item.save_to_db()
         except Exception:
             return dict(message='An error occurred inserting item!'), 500
         return item.json(), 201
 
     def delete(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
-        connection = sqlite3.connect('db/data.db')
-        cursor = connection.cursor()
-        query = "DELETE FROM items WHERE name=?"
-        cursor.execute(query, (name, ))
-        connection.commit()
-        connection.close()
-        return dict(message=f'An item {name} successfully deleted!'), 200  # TODO: detect when failing to dalete.
+        item = ItemModel.find_by_name(name)
+        if item:
+            item.delete_from_db()
+            return dict(message=f'An item {name} successfully deleted!'), 200
+        return dict(message=f"An item {name} doesn't exist!"), 200
 
     def put(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
         data = self.parser.parse_args()
-        item = ItemModel(name=name, price=data['price'])
-
-        if ItemModel.find_by_name(name):
+        item = ItemModel.find_by_name(name)
+        if item:
             try:
-                item.update_items()
+                item.price = data['price']
             except Exception:
                 return dict(message='An error occurred updating item!'), 500
         else:
             try:
-                item.insert_items()
+                item = ItemModel(name=name, price=data['price'])
             except Exception:
                 return dict(message='An error occurred inserting item!'), 500
+        item.save_to_db()
         return item.json(), 201
 
 
