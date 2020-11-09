@@ -1,3 +1,4 @@
+import sqlite3
 from typing import Dict, Any, Optional
 
 from db import db
@@ -41,14 +42,14 @@ class ItemModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @staticmethod
-    def find_by_name(name: str) -> Optional["ItemModel"]:
-        # connection = sqlite3.connect('db/data.db')
+    @classmethod
+    def find_by_name(cls, name: str) -> Optional["ItemModel"]:
+        # connection = sqlite3.connect('data.db')
         # cursor = connection.cursor()
         # query = "SELECT * FROM items WHERE name=?"
         # result = cursor.execute(query, (name,))
         # row = result.fetchone()
         # connection.close()
         # if row:
-        #     return ItemModel(*row)
-        return ItemModel.query.filter_by(name=name).first()
+        #     return ItemModel(name=row[1], price=row[2])
+        return cls.query.filter_by(name=name).first()
