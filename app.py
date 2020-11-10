@@ -7,7 +7,7 @@ from security import authenticate, identity
 from resources.user import UserRegister
 
 app = Flask(__name__)
-app.config['SQLARCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLARCHEMY_DATABASE_URI'] = 'sqlite:///data.db'  # なぜか db/data.db が認識されてしまう。
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'dummy'
 api = Api(app)
