@@ -55,7 +55,7 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self) -> Tuple[Dict[str, List], int]:
-        connection = sqlite3.connect('db/data.db')
+        connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
         query = "SELECT * FROM items"
         result = cursor.execute(query)
