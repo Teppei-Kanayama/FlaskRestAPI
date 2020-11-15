@@ -1,4 +1,3 @@
-import sqlite3
 from typing import Dict, Any, Optional
 
 from db import db
@@ -22,34 +21,10 @@ class ItemModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    # def insert_items(self) -> None:
-    #     connection = sqlite3.connect('db/data.db')
-    #     cursor = connection.cursor()
-    #     query = "INSERT INTO items VALUES (?, ?)"
-    #     cursor.execute(query, (self.name, self.price))
-    #     connection.commit()
-    #     connection.close()
-    #
-    # def update_items(self) -> None:
-    #     connection = sqlite3.connect('db/data.db')
-    #     cursor = connection.cursor()
-    #     query = "UPDATE items SET price=? WHERE name=?"
-    #     cursor.execute(query, (self.price, self.name))
-    #     connection.commit()
-    #     connection.close()
-
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
 
     @classmethod
     def find_by_name(cls, name: str) -> Optional["ItemModel"]:
-        # connection = sqlite3.connect('data.db')
-        # cursor = connection.cursor()
-        # query = "SELECT * FROM items WHERE name=?"
-        # result = cursor.execute(query, (name,))
-        # row = result.fetchone()
-        # connection.close()
-        # if row:
-        #     return ItemModel(name=row[1], price=row[2])
         return cls.query.filter_by(name=name).first()
