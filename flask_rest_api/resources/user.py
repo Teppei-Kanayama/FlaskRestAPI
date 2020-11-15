@@ -2,7 +2,7 @@ from typing import Tuple, Dict
 
 from flask_restful import Resource, reqparse
 
-from models.user import UserModel
+from flask_rest_api.models.user import UserModel
 
 
 class UserRegister(Resource):

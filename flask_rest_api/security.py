@@ -2,7 +2,7 @@ from typing import Optional, Dict
 
 from werkzeug.security import safe_str_cmp
 
-from models.user import UserModel
+from flask_rest_api.models.user import UserModel
 
 
 def authenticate(username: str, password: str) -> Optional[UserModel]:

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from db import db
+from flask_rest_api.db import db
 
 
 class UserModel(db.Model):

@@ -1,6 +1,6 @@
 from typing import Dict, Any, Optional
 
-from db import db
+from flask_rest_api.db import db
 
 
 class ItemModel(db.Model):
