@@ -55,14 +55,4 @@ class Item(Resource):
 
 class ItemList(Resource):
     def get(self) -> Tuple[Dict[str, List], int]:
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-        query = "SELECT * FROM items"
-        result = cursor.execute(query)
-
-        items = []
-        for row in result:
-            items.append({'items': row[0], 'price': row[1]})
-        connection.close()
-
-        return {"items": items}, 200
+        return {"items": [item.json() for item in ItemModel.query.all()]}, 200
