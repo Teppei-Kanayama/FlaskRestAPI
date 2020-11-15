@@ -1,4 +1,3 @@
-import sqlite3
 from typing import Dict, List, Optional, Tuple
 
 from flask_jwt import jwt_required
@@ -10,6 +9,7 @@ from models.item import ItemModel
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price', type=float, required=True, help='Price of the item')
+    parser.add_argument('store_id', type=int, required=True, help='Which store does the item belong to.')
 
     @jwt_required()
     def get(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
@@ -21,8 +21,8 @@ class Item(Resource):
     def post(self, name: str) -> Tuple[Dict[str, Optional[str]], int]:
         if ItemModel.find_by_name(name):
             return dict(message=f'An item {name} already exists!'), 400
-        posted_data = self.parser.parse_args()
-        item = ItemModel(name=name, price=posted_data['price'])
+        data = self.parser.parse_args()
+        item = ItemModel(name=name, **data)
         try:
             item.save_to_db()
         except Exception:
@@ -46,7 +46,7 @@ class Item(Resource):
                 return dict(message='An error occurred updating item!'), 500
         else:
             try:
-                item = ItemModel(name=name, price=data['price'])
+                item = ItemModel(name=name, **data)
             except Exception:
                 return dict(message='An error occurred inserting item!'), 500
         item.save_to_db()
