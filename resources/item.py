@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Tuple
 from flask_jwt import jwt_required
 from flask_restful import Resource, reqparse
 
-from models.items import ItemModel
+from models.item import ItemModel
 
 
 class Item(Resource):
