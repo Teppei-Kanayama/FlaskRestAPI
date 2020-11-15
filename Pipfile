@@ -12,6 +12,7 @@ flask-jwt = "*"
 werkzeug = "*"
 flask-sqlalchemy = "*"
 uwsgi = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.8"
