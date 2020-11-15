@@ -11,6 +11,7 @@ flask-restful = "*"
 flask-jwt = "*"
 werkzeug = "*"
 flask-sqlalchemy = "*"
+uwsgi = "*"
 
 [requires]
 python_version = "3.8"
